@@ -4,546 +4,461 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Stream</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <title>SocialHub Final</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <style>
         :root {
             --primary: #4F46E5;
-            /* Indigo 600 */
-            --primary-hover: #4338ca;
-            --bg-body: #F3F4F6;
-            /* Gray 100 */
-            --bg-card: #FFFFFF;
+            --bg: #F3F4F6;
+            --surface: #FFFFFF;
             --text-main: #111827;
-            /* Gray 900 */
-            --text-muted: #6B7280;
-            /* Gray 500 */
-            --danger: #EF4444;
-            --danger-bg: #FEE2E2;
-            --success: #10B981;
+            --text-sub: #6B7280;
             --border: #E5E7EB;
+            --danger: #EF4444;
+            --success: #10B981;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
+            background: var(--bg);
             color: var(--text-main);
             margin: 0;
-            padding-top: 70px;
-            /* Space for sticky header */
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
         }
 
-        /* --- LAYOUT UTILS --- */
-        .container {
-            max-width: 650px;
-            margin: 0 auto;
-            padding: 0 1rem;
+        /* --- AUTH SECTION --- */
+        #auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 20px;
+            align-self: center;
+        }
+
+        .auth-card {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        .link {
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: block;
+            text-decoration: underline;
+        }
+
+        /* --- APP LAYOUT --- */
+        #app-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        aside {
+            width: 260px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-sub);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #EEF2FF;
+            color: var(--primary);
+        }
+
+        main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: var(--text-sub);
+            transition: 0.2s;
+            margin-right: 5px;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: #F3F4F6;
+            color: var(--text-main);
+        }
+
+        .btn-del:hover {
+            background: #FEE2E2;
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .btn-down:hover {
+            background: #D1FAE5;
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .btn-like {
+            color: var(--primary);
+            border-color: #EEF2FF;
+            background: #EEF2FF;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            background: #F9FAFB;
+            margin-bottom: 30px;
+        }
+
+        .upload-input {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin: 5px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            transform: translateY(20px);
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .hidden {
             display: none !important;
         }
 
-        .flex {
-            display: flex;
-            align-items: center;
-        }
-
-        .flex-between {
-            justify-content: space-between;
-        }
-
-        .gap-2 {
-            gap: 0.5rem;
-        }
-
-        .gap-4 {
-            gap: 1rem;
-        }
-
-        /* --- HEADER --- */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            height: 60px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-content {
-            width: 100%;
-            max-width: 650px;
-            padding: 0 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .brand {
-            font-weight: 800;
-            font-size: 1.25rem;
-            color: var(--primary);
-            letter-spacing: -0.5px;
-        }
-
-        /* --- CARDS --- */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .card:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        /* --- AUTH SCREEN --- */
-        .auth-wrapper {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .auth-card {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        /* BIG ERROR MESSAGE STYLE */
-        .error-banner {
-            background-color: #FEF2F2;
-            border: 2px solid var(--danger);
-            color: #991B1B;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
-        }
-
-        @keyframes shake {
-
-            10%,
-            90% {
-                transform: translate3d(-1px, 0, 0);
-            }
-
-            20%,
-            80% {
-                transform: translate3d(2px, 0, 0);
-            }
-
-            30%,
-            50%,
-            70% {
-                transform: translate3d(-4px, 0, 0);
-            }
-
-            40%,
-            60% {
-                transform: translate3d(4px, 0, 0);
-            }
-        }
-
-        /* --- FORMS --- */
-        input,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: #F9FAFB;
-            font-family: inherit;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-            margin-bottom: 1rem;
-            transition: all 0.2s;
-        }
-
-        input:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-        }
-
-        /* --- BUTTONS --- */
-        button {
-            padding: 10px 16px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-muted);
-        }
-
-        .btn-ghost:hover {
-            background: #F3F4F6;
-            color: var(--text-main);
-        }
-
-        /* --- TABS --- */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            padding: 4px;
+        .user-tag {
             background: #E5E7EB;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .tab.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        /* --- POST & AVATAR --- */
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            color: white;
-            font-weight: 700;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .post-header {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .post-meta {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .username {
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .timestamp {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .post-actions {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-like {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            background: transparent;
-        }
-
-        .btn-like:hover {
-            color: #E11D48;
-            background: #FFE4E6;
-        }
-
-        .btn-delete {
-            background: var(--danger-bg);
-            color: var(--danger);
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-
-        .btn-delete:hover {
-            background: #FECACA;
-        }
-
-        /* --- FILES --- */
-        .file-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            background: #F9FAFB;
-        }
-
-        .file-icon {
-            font-size: 1.5rem;
-            margin-right: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: #4B5563;
+            margin-left: 8px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar hidden" id="navbar">
-        <div class="nav-content">
-            <div class="brand">⚡ SocialStream</div>
-            <div class="flex gap-4">
-                <span id="user-display" style="font-size: 0.9rem; font-weight: 500;">User</span>
-                <button class="btn-ghost" onclick="logout()" style="padding: 6px 12px;">Logout</button>
-            </div>
-        </div>
-    </nav>
+    <div id="toast">Success</div>
 
-    <div id="auth-section" class="auth-wrapper">
-        <div class="card auth-card">
-            <h1 style="margin-bottom: 0.5rem; color: var(--primary);">Welcome</h1>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">Sign in to your account</p>
+    <div id="auth-container">
+        <div class="auth-card">
+            <h2 id="auth-title">Welcome Back</h2>
+            <p style="color:var(--text-sub); margin-bottom:20px;">Please enter your details</p>
 
-            <div id="auth-error" class="error-banner hidden">
-                <span>⚠️</span> <span id="error-text">Invalid Credentials</span>
-            </div>
+            <input type="email" id="email" class="auth-input" placeholder="Email Address">
+            <input type="password" id="password" class="auth-input" placeholder="Password">
 
-            <form onsubmit="handleAuth(event)">
-                <input type="email" id="email" placeholder="name@example.com" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit" class="btn-primary" id="auth-btn">Sign In</button>
-            </form>
+            <button class="btn-full" onclick="handleAuth()" id="auth-btn">Log In</button>
 
-            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-                <span id="auth-toggle-text" style="cursor: pointer; text-decoration: underline;"
-                    onclick="toggleAuthMode()">
-                    New here? Create an account
-                </span>
-            </p>
+            <span class="link" onclick="toggleAuth()" id="auth-toggle">New here? Create an account</span>
+
+            <p id="auth-error" style="color:red; font-size:0.9rem; margin-top:10px;"></p>
         </div>
     </div>
 
-    <div id="app-section" class="container hidden">
+    <div id="app-container" class="hidden">
+        <aside>
+            <div class="logo"><i class="ph ph-share-network"></i> SocialHub</div>
+            <div class="nav-item active" onclick="nav('feed')" id="nav-feed"><i class="ph ph-newspaper"></i> Feed</div>
+            <div class="nav-item" onclick="nav('files')" id="nav-files"><i class="ph ph-folder-open"></i> All Files
+            </div>
+            <div style="flex:1;"></div>
+            <div class="nav-item" onclick="logout()"><i class="ph ph-sign-out"></i> Log Out</div>
+        </aside>
 
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('posts')" id="tab-posts">Home Feed</div>
-            <div class="tab" onclick="switchTab('files')" id="tab-files">File Manager</div>
-        </div>
+        <main>
+            <div class="header">
+                <h2 id="page-title">Global Feed</h2>
+                <div id="user-display" style="font-weight:600; color:var(--text-sub);">User</div>
+            </div>
 
-        <div id="view-posts">
-            <div class="card">
-                <div class="flex gap-4" style="align-items: flex-start;">
-                    <div class="avatar" id="my-avatar">ME</div>
-                    <div style="width: 100%;">
-                        <input type="text" id="post-title" placeholder="Title (Optional)"
-                            style="margin-bottom: 8px; font-weight:600;">
-                        <textarea id="post-content" rows="2" placeholder="What's happening?"
-                            style="border: none; background: transparent; padding: 0;"></textarea>
+            <div id="view-feed">
+                <div class="card">
+                    <input type="text" id="post-title" class="auth-input" style="width:100%;" placeholder="Post Title">
+                    <textarea id="post-content" class="auth-input" style="width:100%;" rows="2"
+                        placeholder="Message..."></textarea>
+                    <button class="btn-full" style="width:auto; padding:8px 20px;" onclick="createPost()">Post</button>
+                </div>
+                <div id="feed-list"></div>
+            </div>
+
+            <div id="view-files" class="hidden">
+                <div class="upload-zone">
+                    <i class="ph ph-cloud-arrow-up" style="font-size: 2rem; color: var(--primary);"></i>
+                    <h3>Upload to Public Storage</h3>
+                    <div>
+                        <input type="file" id="file-upload" class="upload-input">
                     </div>
+                    <button class="btn-full" style="width:auto; padding:8px 30px;"
+                        onclick="uploadFile()">Upload</button>
                 </div>
-                <div
-                    style="text-align: right; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px;">
-                    <button class="btn-primary" style="width: auto;" onclick="createPost()">Post</button>
-                </div>
-            </div>
 
-            <div id="posts-container">
-            </div>
-        </div>
-
-        <div id="view-files" class="hidden">
-            <div class="card">
-                <h3 style="margin-top: 0;">Upload Document</h3>
-                <div
-                    style="border: 2px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; background: #F9FAFB;">
-                    <input type="file" id="file-input" style="width: auto; background: transparent; border: none;">
-                    <br>
-                    <button class="btn-primary" style="width: auto; margin-top: 1rem;" onclick="uploadFile()">Upload
-                        Now</button>
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                        <h3>All Uploaded Files</h3>
+                        <button class="action-btn" onclick="fetchFiles()"><i
+                                class="ph ph-arrows-clockwise"></i></button>
+                    </div>
+                    <div id="files-list">Loading...</div>
                 </div>
             </div>
-
-            <div class="flex-between" style="margin-bottom: 1rem; align-items: center;">
-                <h3 style="margin: 0;">My Files</h3>
-                <button class="btn-ghost" onclick="fetchFiles()">Refresh ⟳</button>
-            </div>
-
-            <div id="files-container"></div>
-        </div>
+        </main>
     </div>
 
     <script>
-        const API_URL = "https://example-fastapi-1rwn.onrender.com"; // Change for Production
+        // CONFIG
+        const API_URL = "https://example-fastapi-1rwn.onrender.com"; // CHANGE THIS FOR RENDER
+
         let token = localStorage.getItem("token");
-        let isLoginMode = true;
+        let currentUserEmail = "";
+        let isLoginMode = true; // Track if user is Logging in or Registering
 
-        if (token) initApp();
+        if (token) startApp();
 
-        function initApp() {
-            document.getElementById("auth-section").classList.add("hidden");
-            document.getElementById("app-section").classList.remove("hidden");
-            document.getElementById("navbar").classList.remove("hidden");
-            document.getElementById("my-avatar").innerText = "ME"; // Could be user initials
-            fetchPosts();
+        function parseJwt(token) { try { return JSON.parse(atob(token.split('.')[1])); } catch (e) { return null; } }
+
+        function startApp() {
+            const payload = parseJwt(token);
+            if (payload) currentUserEmail = payload.sub;
+            document.getElementById("user-display").innerText = currentUserEmail;
+
+            document.getElementById("auth-container").classList.add("hidden");
+            document.getElementById("app-container").classList.remove("hidden");
+            nav('feed');
         }
 
-        // --- AUTHENTICATION ---
-        function toggleAuthMode() {
+        // --- AUTH LOGIC (Updated) ---
+        function toggleAuth() {
             isLoginMode = !isLoginMode;
-            document.getElementById("auth-btn").innerText = isLoginMode ? "Sign In" : "Create Account";
-            document.getElementById("auth-toggle-text").innerText = isLoginMode ? "New here? Create an account" : "Have an account? Sign In";
-            document.getElementById("auth-error").classList.add("hidden");
+            // Update UI text based on mode
+            document.getElementById("auth-title").innerText = isLoginMode ? "Welcome Back" : "Create Account";
+            document.getElementById("auth-btn").innerText = isLoginMode ? "Log In" : "Register";
+            document.getElementById("auth-toggle").innerText = isLoginMode ? "New here? Create an account" : "Have an account? Log In";
+            document.getElementById("auth-error").innerText = "";
         }
 
-        async function handleAuth(e) {
-            e.preventDefault();
+        async function handleAuth() {
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-            const errorBox = document.getElementById("auth-error");
+            const errBox = document.getElementById("auth-error");
 
-            errorBox.classList.add("hidden"); // Reset error
+            if (!email || !password) {
+                errBox.innerText = "Please enter email and password";
+                return;
+            }
 
             try {
                 if (isLoginMode) {
+                    // LOGIN FLOW
                     const formData = new FormData();
                     formData.append("username", email);
                     formData.append("password", password);
 
                     const res = await fetch(`${API_URL}/login`, { method: "POST", body: formData });
-
-                    if (!res.ok) throw new Error("Incorrect email or password.");
-
-                    const data = await res.json();
-                    localStorage.setItem("token", data.access_token);
-                    token = data.access_token;
-                    initApp();
+                    if (res.ok) {
+                        const data = await res.json();
+                        token = data.access_token;
+                        localStorage.setItem("token", token);
+                        startApp();
+                    } else {
+                        errBox.innerText = "Invalid credentials. Try again.";
+                    }
                 } else {
+                    // CREATE USER FLOW
                     const res = await fetch(`${API_URL}/users/`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ email, password })
+                        body: JSON.stringify({ email: email, password: password })
                     });
-                    if (!res.ok) throw new Error("Email already taken.");
-                    alert("Account created! Logging you in...");
-                    toggleAuthMode();
+
+                    if (res.ok) {
+                        showToast("Account Created! Please Log In.");
+                        toggleAuth(); // Switch back to login screen
+                    } else {
+                        errBox.innerText = "Registration failed (Email might be taken).";
+                    }
                 }
-            } catch (err) {
-                // SHOW BIG ERROR
-                document.getElementById("error-text").innerText = err.message;
-                errorBox.classList.remove("hidden");
-            }
+            } catch (e) { errBox.innerText = e.message; }
         }
 
-        function logout() {
-            localStorage.removeItem("token");
-            location.reload();
-        }
+        function logout() { localStorage.clear(); location.reload(); }
 
-        function switchTab(tab) {
-            document.getElementById("view-posts").classList.add("hidden");
+        // --- NAVIGATION ---
+        function nav(view) {
+            document.getElementById("view-feed").classList.add("hidden");
             document.getElementById("view-files").classList.add("hidden");
-            document.getElementById("tab-posts").classList.remove("active");
-            document.getElementById("tab-files").classList.remove("active");
+            document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
 
-            document.getElementById(`view-${tab}`).classList.remove("hidden");
-            document.getElementById(`tab-${tab}`).classList.add("active");
+            document.getElementById(`view-${view}`).classList.remove("hidden");
+            document.getElementById(`nav-${view}`).classList.add("active");
+            document.getElementById("page-title").innerText = view === 'feed' ? "Global Feed" : "Public File Storage";
 
-            if (tab === 'files') fetchFiles();
+            if (view === 'feed') fetchFeed();
+            if (view === 'files') fetchFiles();
         }
 
-        // --- POSTS ---
-        async function fetchPosts() {
+        function showToast(msg) {
+            const t = document.getElementById("toast");
+            t.innerText = msg; t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), 3000);
+        }
+
+        // --- POSTS (Shows User Name) ---
+        async function fetchFeed() {
+            const list = document.getElementById("feed-list");
             const res = await fetch(`${API_URL}/posts/`, { headers: { "Authorization": `Bearer ${token}` } });
             const posts = await res.json();
-            const container = document.getElementById("posts-container");
-            container.innerHTML = "";
+            list.innerHTML = "";
+            posts.forEach(p => {
+                const post = p.Post ? p.Post : p;
+                const votes = p.votes !== undefined ? p.votes : 0;
 
-            posts.forEach(item => {
-                const p = item.Post ? item.Post : item;
-                const votes = item.votes !== undefined ? item.votes : 0;
+                // Show User Email instead of ID
+                const ownerName = post.owner ? post.owner.email : `User ${post.owner_id}`;
 
-                // Get Username & Initials
-                const ownerEmail = p.owner ? p.owner.email : `user${p.owner_id}@app.com`;
-                const username = ownerEmail.split('@')[0];
-                const initials = username.substring(0, 2).toUpperCase();
-                const date = new Date(p.created_at).toLocaleDateString();
-
-                const html = `
-                    <div class="card">
-                        <div class="post-header">
-                            <div class="avatar">${initials}</div>
-                            <div class="post-meta">
-                                <span class="username">@${username}</span>
-                                <span class="timestamp">${date}</span>
-                            </div>
-                        </div>
-                        <h3 style="margin: 0 0 8px 0;">${p.title}</h3>
-                        <p style="margin: 0; line-height: 1.5;">${p.content}</p>
-                        
-                        <div class="post-actions">
-                            <button class="btn-like" onclick="votePost(${p.id})">
-                                ❤️ <span style="font-weight:700;">${votes}</span>
-                            </button>
-                            <button class="btn-delete" onclick="deletePost(${p.id})">Delete</button>
+                list.innerHTML += `
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <h3 style="margin:0;">
+                                ${post.title} 
+                                <span class="user-tag">@${ownerName}</span>
+                            </h3>
+                            <p style="color:var(--text-sub); margin-top:5px;">${post.content}</p>
                         </div>
                     </div>
-                `;
-                container.innerHTML += html;
+                    
+                    <div style="margin-top:15px; display:flex; gap:5px; align-items:center;">
+                        <button class="action-btn btn-like" onclick="vote(${post.id}, 1)">
+                            <i class="ph ph-thumbs-up"></i> ${votes} Likes
+                        </button>
+                        <button class="action-btn" onclick="vote(${post.id}, 0)" title="Dislike">
+                            <i class="ph ph-thumbs-down"></i>
+                        </button>
+                    </div>
+                </div>`;
             });
         }
 
         async function createPost() {
             const title = document.getElementById("post-title").value;
             const content = document.getElementById("post-content").value;
-            if (!title || !content) return alert("Please fill both fields");
-
             await fetch(`${API_URL}/posts/`, {
                 method: "POST",
                 headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
@@ -551,62 +466,54 @@
             });
             document.getElementById("post-title").value = "";
             document.getElementById("post-content").value = "";
-            fetchPosts();
+            fetchFeed();
         }
 
-        async function deletePost(id) {
-            if (!confirm("Delete this post?")) return;
-            const res = await fetch(`${API_URL}/posts/${id}`, {
-                method: "DELETE",
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            if (res.ok) fetchPosts();
-            else alert("Permission Denied.");
+        async function vote(id, direction) {
+            try {
+                const res = await fetch(`${API_URL}/votes/`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({ post_id: id, dir: direction })
+                });
+                if (res.ok) fetchFeed();
+                else showToast(direction === 0 ? "Not liked yet!" : "Already liked!");
+            } catch (e) { console.error(e); }
         }
 
-        async function votePost(id) {
-            await fetch(`${API_URL}/votes/`, {
-                method: "POST",
-                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ post_id: id, dir: 1 })
-            });
-            fetchPosts();
-        }
-
-        // --- FILES ---
+        // --- FILES (No Rename Option) ---
         async function fetchFiles() {
+            const list = document.getElementById("files-list");
+            list.innerHTML = "Loading...";
+
             const res = await fetch(`${API_URL}/files/`, { headers: { "Authorization": `Bearer ${token}` } });
             const files = await res.json();
-            const container = document.getElementById("files-container");
-            container.innerHTML = "";
 
-            if (files.length === 0) container.innerHTML = "<p style='text-align:center; color: #9CA3AF;'>No files yet.</p>";
+            list.innerHTML = "";
+            if (files.length === 0) return list.innerHTML = "<p style='text-align:center; color:#999;'>No files yet.</p>";
 
-            files.forEach(file => {
-                const ownerName = file.owner ? file.owner.email.split('@')[0] : `User ${file.owner_id}`;
+            files.forEach(f => {
+                const ownerEmail = f.owner ? f.owner.email : "Unknown";
+                const isMine = ownerEmail === currentUserEmail;
+                const deleteBtn = isMine ? `<button class="action-btn btn-del" onclick="deleteFile(${f.id})"><i class="ph ph-trash"></i></button>` : '';
 
-                const html = `
-                    <div class="file-item">
-                        <div class="flex">
-                            <div class="file-icon">📄</div>
-                            <div>
-                                <div style="font-weight:600;">${file.filename}</div>
-                                <div style="font-size:0.8rem; color:var(--text-muted);">By @${ownerName}</div>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="btn-primary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="downloadFile(${file.id}, '${file.filename}')">⬇</button>
-                            <button class="btn-delete" onclick="deleteFile(${file.id})">✕</button>
-                        </div>
+                list.innerHTML += `
+                <div class="file-item">
+                    <div>
+                        <div style="font-weight:600;">${f.filename}</div>
+                        <div style="font-size:0.8rem; color:var(--text-sub);">Uploaded by: ${ownerEmail}</div>
                     </div>
-                `;
-                container.innerHTML += html;
+                    <div>
+                        <button class="action-btn btn-down" onclick="downloadFile(${f.id}, '${f.filename}')"><i class="ph ph-download-simple"></i></button>
+                        ${deleteBtn}
+                    </div>
+                </div>`;
             });
         }
 
         async function uploadFile() {
-            const input = document.getElementById("file-input");
-            if (!input.files[0]) return alert("Select file first");
+            const input = document.getElementById("file-upload");
+            if (!input.files[0]) return showToast("Select file first");
 
             const formData = new FormData();
             formData.append("file", input.files[0]);
@@ -616,31 +523,26 @@
                 headers: { "Authorization": `Bearer ${token}` },
                 body: formData
             });
-            if (res.ok) fetchFiles();
-            else alert("Upload failed");
+
+            if (res.ok) { showToast("Uploaded!"); fetchFiles(); }
+            else showToast("Upload Failed");
         }
 
-        async function deleteFile(id) {
-            if (!confirm("Delete this file?")) return;
-            const res = await fetch(`${API_URL}/files/${id}`, {
-                method: "DELETE",
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            if (res.ok) fetchFiles();
-            else alert("Permission Denied");
-        }
-
-        async function downloadFile(id, filename) {
+        async function downloadFile(id, name) {
             const res = await fetch(`${API_URL}/files/download/${id}`, { headers: { "Authorization": `Bearer ${token}` } });
             if (res.ok) {
                 const blob = await res.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
-                a.href = url; a.download = filename;
+                a.href = url; a.download = name;
                 document.body.appendChild(a); a.click(); a.remove();
-            } else {
-                alert("Permission Denied");
-            }
+            } else showToast("Download failed");
+        }
+
+        async function deleteFile(id) {
+            if (!confirm("Delete this file?")) return;
+            const res = await fetch(`${API_URL}/files/${id}`, { method: "DELETE", headers: { "Authorization": `Bearer ${token}` } });
+            if (res.ok) { showToast("Deleted"); fetchFiles(); }
         }
     </script>
 </body>
